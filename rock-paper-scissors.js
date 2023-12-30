@@ -11,8 +11,13 @@ function reset() {
   document.querySelector('.js-score').innerHTML = `Player: ${score.player}, Computer: ${score.computer}, Ties: ${score.ties}`;
 }
 
-function play(player) {
+function computerMove() {
   let computer = Math.floor(Math.random() * 3);
+  return computer;
+}
+
+function play(player) {
+  let computer = computerMove();
   if (player === 0 && player === computer) {
     score.ties++;
     document.querySelector('.js-result').innerHTML = 'Draw: You <img src="Images/rock-emoji.png" class="image-results"> vs <img src="Images/rock-emoji.png" class="image-results"> Computer';
@@ -43,4 +48,22 @@ function play(player) {
   }
   document.querySelector('.js-score').innerHTML = `Player: ${score.player}, Computer: ${score.computer}, Ties: ${score.ties}`;
   localStorage.setItem('score', JSON.stringify(score));
+}
+
+let autoPlaying;
+function autoPlay() {
+  const autoPlayElement = document.querySelector('.js-autoplay');
+  if (autoPlayElement.classList.contains('off')) {
+    autoPlaying = setInterval(function() {
+      play(computerMove())
+    }, 1000);
+    autoPlayElement.classList.remove('off');
+    autoPlayElement.classList.add('on');
+    autoPlayElement.innerHTML = 'Stop Play';
+  } else {
+    clearInterval(autoPlaying);
+    autoPlayElement.classList.remove('on');
+    autoPlayElement.classList.add('off');
+    autoPlayElement.innerHTML = 'Auto Play';
+  }
 }
